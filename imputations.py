@@ -27,15 +27,15 @@ class ChannelMeanImputer(BaseImputer):
 		return img
 
 
-class ZeroImputer():
+class ZeroImputer(BaseImputer):
 	def __call__(self, img: torch.Tensor, mask: torch.Tensor):
-		return img*(1-mask.unsqueeze(0))
+		return img*mask.unsqueeze(0)
 
 
 # Code for infilling.
 neighbors_weights = [((1,1), 1/12), ((0,1), 1/6), ((-1,1), 1/12), ((1,-1), 1/12), ((0,-1), 1/6), ((-1,-1), 1/12), ((1,0), 1/6), ((-1,0), 1/6)]
 
-class NoisyLinearImputer():
+class NoisyLinearImputer(BaseImputer):
 	def __init__(self, noise=0.01, weighting=neighbors_weights):
 		"""	
 			Noisy linear imputation.	
