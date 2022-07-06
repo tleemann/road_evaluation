@@ -1,11 +1,10 @@
+## A quicker version of the Imputed Dataset, that allows to computute the imputations on the GPU (particularly important for GAIN)
+import imp
 import torch
-from torch._C import device
-import torchvision
+
 import torchvision.transforms as transforms
 from torchvision import datasets, models
-import matplotlib
-
-import pickle
+from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -13,42 +12,17 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.optim as optim
-from tqdm import tqdm
+# from tqdm import tqdm
 from torch.optim.lr_scheduler import MultiStepLR
 from PIL import Image
 import typing as tp
-from imputations import BaseImputer, ChannelMeanImputer, NoisyLinearImputer
-
-torch.manual_seed(2)
-np.random.seed(2)
-
-## Some utility functions.
-### set device, use cuda if available
-if torch.cuda.is_available():
-	use_device="cuda:1"
-else:
-	use_device="cpu"
-
-def set_device(device_str):
-	""" Change device. """
-	global use_device
-	use_device = device_str
-
-def normalize_map(s):
-	""" Min max normalization """
-	epsilon = 1e-5
-	norm_s = (s -np.min(s))/(np.max(s)-np.min(s) + epsilon)
-	return norm_s
-
-def rescale_channel(exp):
-	exp = np.sum(exp, axis=-1)
-	exp = normalize_map(exp)
-	return exp
-
-
-class ImputedDataset(torch.utils.data.Dataset):
+from .imputations import BaseImputer, ChannelMeanImputer, NoisyLinearImputer
+from .road import normalize_map, rescale_channel
+class ImputedDatasetMasksOnly(torch.utils.data.Dataset):
 	"""
 	Base class for an imputed dataset according to the ROAD benchmark.
+	Unlike the dataset in the original method, the imputation is left to the 
+	data_loader.
 	Parameters:
 		base_dataset: The original dataset. Must return an (image, label) tuple 
 			if base_dataset[index] is called, where both are tensors. 
@@ -70,13 +44,10 @@ class ImputedDataset(torch.utils.data.Dataset):
 	"""
 	def __init__(
 	 		self,
-	 		base_dataset: tp.Union[torch.utils.data.Dataset, tp.SupportsIndex],
-			mask: tp.Union[torch.utils.data.Dataset, tp.SupportsIndex],
+			base_dataset, # : tp.Union[torch.utils.data.Dataset, tp.SupportsIndex],
+			mask, #: tp.Union[torch.utils.data.Dataset, tp.SupportsIndex],
 			th_p=1.0,
 			remove=True,
-			imputation: BaseImputer = ChannelMeanImputer(),
-			transform = None,
-			target_transform = None,
 			prediction = [],
 			use_cache=False
 	) -> None:
@@ -88,13 +59,11 @@ class ImputedDataset(torch.utils.data.Dataset):
 		self.prediction = prediction
 		# a constant small perturbation for attribution map with many equal values.
 		self.random_v = 1e-4*(np.random.randn(*self.img_mask[0].shape[:2]))
-		self.imputation = imputation # Either 'fixed' or 'linear'
 		self.use_cache = use_cache
 		self.cached_img = {}
 		self.cached_target = {}
 		self.cached_pred = {}
-		self.transform = transform
-		self.target_transform = target_transform
+		self.cached_mask = {}
 
 	def __getitem__(self, index: int):
 		"""
@@ -127,59 +96,67 @@ class ImputedDataset(torch.utils.data.Dataset):
 			bitmask[coords] = 0
 			bitmask = bitmask.reshape(width, height)
 
-			# Call the imputor.
-			img = self.imputation(img, bitmask)
-		
-
 			if self.use_cache: # Add to cache.
 				self.cached_img[index] = img
 				self.cached_target[index] = target
 				self.cached_pred[index] = pred
-		else:
+				self.cached_mask[index] = bitmask
+		else:	
 			img = self.cached_img[index]
 			target = self.cached_target[index]
 			pred = self.cached_pred[index]
 
-		if self.transform is not None:
-			img = self.transform(img)
-		if self.target_transform is not None:
-			target = self.target_transform(target)
-
-		return img, target, pred
+		return img, target, pred, bitmask
 
 	def __len__(self):
 		return len(self.base_dataset)
 
 
-def road_eval(model, testloader):
-	# eval the model for a specific modified data set
-	# Return accuracy and average true class probability.
-	correct = 0
-	prob = 0.0
-	model.eval()
-	model.to(use_device)
-	with torch.no_grad():
-		for data in tqdm(testloader):
-			inputs, labels, predictions = data
-			inputs = inputs.to(use_device)
-			labels = labels.to(use_device)
-			predictions = predictions.to(use_device)
-			outputs = model(inputs)
-			_, predicted = torch.max(outputs.data, 1)
-			correct += (predicted == labels).sum().item()
-		##### calculate the average probability
-			probs = torch.nn.functional.softmax(outputs, dim=1)
-			for k,p in enumerate(predictions):
-				prob += probs[k,p].cpu().numpy()
-		print('Accuracy of the network on test images: %.4f %%, average probability:  %.4f' % (
-					100 * correct / len(testloader.dataset), prob / len(testloader.dataset)))
-	acc_avg = correct / len(testloader.dataset)
-	prob_avg = prob / len(testloader.dataset)
-	return acc_avg, prob_avg
+class ImputingDataLoaderWrapper(DataLoader):
+	def __init__(self, org_data_loader: DataLoader, imputer: BaseImputer, image_transform=None, target_transform=None):
+		""" Take a base data loader and do imputation on top.
+			the image_transforms and target transforms are applied on top, so please make sure that they also work for batched
+			images / labels.
+		"""
+		self.base_dl = org_data_loader
+		self.imputer = imputer
+		self.image_transform = image_transform
+		self.target_transform = target_transform
 
+	def __len__(self) -> int:
+		return len(self.base_dl)
 
-def run_road(model, dataset_test: tp.SupportsIndex, explanations_test: tp.SupportsIndex,
-			 transform_test, percentages: tp.List[float], morf=True, batch_size = 64):
+	def __iter__(self):
+		class ImputingDLIter(tp.Iterator):
+			def __init__(self, org_data_loader: DataLoader, imputer: BaseImputer, image_transform, target_transform):
+				self.base_dl = org_data_loader
+				self.imputer = imputer
+				self.image_transform = image_transform
+				self.target_transform = target_transform
+				self.myiter = self.base_dl.__iter__()
+
+			def __next__(self):
+				""" Get an item from the base iterator """
+				img, target, pred, bitmask = next(self.myiter) # Stop iteraton is passed on.
+				img = self.imputer.batched_call(img, bitmask)
+				#print(img.shape)
+				if self.target_transform:
+					target = self.target_transform(target)
+				if self.image_transform:
+					img = self.image_transform(img)
+				return img, target, pred
+
+		return ImputingDLIter(self.base_dl, self.imputer, self.image_transform, self.target_transform)
+	
+	@property
+	def dataset(self):
+		return self.base_dl.dataset
+	
+	@property
+	def batch_size(self):
+		return self.base_dl.batch_size
+
+def run_road_batched(model, dataset_test, explanations_test, transform_test, percentages, morf=True, batch_size=64, imputation = NoisyLinearImputer(noise=0.01)):
 	""" Run the ROAD benchmark. 
 		model: Pretrained model on data set
 		dataset_test: the test set to run the benchmark on. Should deterministically return a (tensor, tensor)-tuple.
@@ -189,15 +166,16 @@ def run_road(model, dataset_test: tp.SupportsIndex, explanations_test: tp.Suppor
 		morf: True, if morf oder should be applied, else false.
 		batch_size: Batch size to use for the benchmark. Can be larger as it does inference only.
 	"""
+	from .retraining import road_eval
 	res_acc = torch.zeros(len(percentages))
 	prob_acc = torch.zeros(len(percentages))
 	for i, p in enumerate(percentages):
 		print("Running evaluation for p=", p)
-		ds_test_imputed_lin = ImputedDataset(dataset_test, mask=explanations_test, th_p=p, remove=True, imputation = NoisyLinearImputer(noise=0.01), 
-				transform = transform_test, target_transform = None, prediction = None, use_cache=False)
+		ds_test_imputed_lin = ImputedDatasetMasksOnly(dataset_test, mask=explanations_test, th_p=p, remove=morf, prediction = None, use_cache=False)
 		testloader = torch.utils.data.DataLoader(ds_test_imputed_lin, batch_size=batch_size, shuffle=False, num_workers=8)
-		print(len(ds_test_imputed_lin), len(testloader))
-		acc_avg, prob_avg = road_eval(model, testloader)
+		gpu_loader = ImputingDataLoaderWrapper(testloader, imputer=imputation, image_transform=transform_test)
+		print(len(ds_test_imputed_lin), len(gpu_loader))
+		acc_avg, prob_avg = road_eval(model, gpu_loader)
 		res_acc[i] = acc_avg
 		prob_acc[i] = prob_avg
 	return res_acc, prob_acc
