@@ -3,10 +3,9 @@ import torch
 import numpy as np
 from scipy.sparse import lil_matrix, csc_matrix
 from scipy.sparse.linalg import spsolve
-import road.gisp as gisp 
+from road.gisp.models.gsmv import GNet_ResNet
 
 class BaseImputer():
-
     def __call__(self, img: torch.Tensor, mask: torch.Tensor)-> torch.Tensor:
         """ Call the Imputation function to fill the masked pixels in an image.
             :param img: original image (C,H,W)-tensor
@@ -18,7 +17,7 @@ class BaseImputer():
 
     def batched_call(self, img: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
         """ Call the Imputation function to fill the masked pixels in an image. However, in this version,
-            and entire batch of images will be process, which can results in considerable speedup.
+            and entire batch of images will be processed, which can results in considerable speedup.
             :param img: B original images (B, C, H, W)-tensor
             :param mask: (B, H, W)-tensor with binary masks. 0 indicates pixels absent, 1 indicates pixels present.
             :returns: a (B, C, H, W) tensor, where the original values are kept, if the mask for the pixels is 1 or imputed otherwise.
@@ -37,6 +36,11 @@ class ChannelMeanImputer(BaseImputer):
             imgsubtensor[mask==0] = mean_c
         return img
 
+    def batched_call(self, img: torch.Tensor, mask: torch.Tensor):
+        channel_mean_tensor = img.view(img.shape[0], img.shape[1], -1).mean(axis=2) # [B, C]
+        c_shape = channel_mean_tensor.shape
+        channel_mean_tensor = channel_mean_tensor.unsqueeze(2).unsqueeze(3).expand(c_shape[0], c_shape[1], img.shape[2], img.shape[3])
+        return (channel_mean_tensor * (1.0-mask.unsqueeze(1))) + img*mask.unsqueeze(1)
 
 class ZeroImputer(BaseImputer):
     def __call__(self, img: torch.Tensor, mask: torch.Tensor):
@@ -56,7 +60,7 @@ class GAINImputer(BaseImputer):
             model_file: Path of the pretrained imputation model that should be loaded.
         """
         res_dict = torch.load(model_file, map_location="cpu")
-        self.gain_model = gisp.models.gsmv.GNet_ResNet(n_downsampling=1, n_blocks=4, attention=False)
+        self.gain_model = GNet_ResNet(n_downsampling=1, n_blocks=4, attention=False)
         self.run_on_device = use_device
         self.mfv = res_dict["mfv"].to(self.run_on_device)
         self.gain_model.load_state_dict(res_dict["generator"])
@@ -187,6 +191,12 @@ class NoisyLinearImputer(BaseImputer):
             
         return img_infill.reshape_as(img)
 
+    def batched_call(self, img: torch.Tensor, mask: torch.Tensor):
+        """ Pseudo implementation of batched interface. """
+        res_list = []
+        for i in range(len(img)):
+            res_list.append(self.__call__(img[i], mask[i]))
+        return torch.stack(res_list)
 
 def _from_str(imputer_str):
     """ Return a default imputer from a string. """
