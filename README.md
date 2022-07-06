@@ -1,5 +1,5 @@
 # Remove And Debias (ROAD)
-## An Efficient and Consistent Evaluation Strategy for Feature Attributions
+## A Consistent and Efficient Evaluation Strategy for Feature Attributions
 
 The repository contains the source code of the (Remove And Debias) ROAD evaluation method for feature attribution methods. It is structured as follows:
 * the folder ```road``` contains the interfaces and classes required to use the ROAD evaluation framework.
@@ -13,9 +13,14 @@ Yao Rong, Tobias Leemann, Vadim Borisov, Gjergji Kasneci and Enkelejda Kasneci. 
 
 
 ## Example
-Check out the notebook ``RoadBenchmark.ipynb`` for an example.
+Check out the notebook ``RoadBenchmarkDemo.ipynb`` for an example.
 
-Our benchmark can be included by using the files ``imputation.py`` and ``road.py``.
+Our benchmark can be included in any project by adding the ``road`` module to the interpreter path. 
+Subsequently, try running 
+
+``from road import run_road``
+
+and start evaluating faithfulness!
 
 We run the script using:
 
@@ -26,4 +31,13 @@ We run the script using:
 -torchvision=0.9
 
 ## Credits
-Please cite us if you use our code or ressources in your own work.
+Please cite us if you use our code or ressources in your own work, for instance with the following BibTex entry:
+```
+@inproceedings{rong2022evaluating,
+  title={A Consistent And Efficient Evaluation Strategy for Feature Attribution Methods},
+  booktitle={International Conference on Machine Learning},
+  author={Rong, Yao and Leemann, Tobias and Borisov, Vadim and Kasneci, Gjergji and Kasneci, Enkelejda},
+  year={2022},
+  organization={PMLR}
+}
+```
