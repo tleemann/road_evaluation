@@ -16,7 +16,12 @@ This repository is structured as follows:
 <img align="left" width="350" height="350" src="https://raw.githubusercontent.com/tleemann/road_evaluation/road_v2/images/imputation_cifar.png">
 
 Attribution methods are explainability techniques, that assign importance scores to input features (i.e., pixels in a computer vision context). With many attribution methods being proposed in the recent literature, the need for sound strategies to evaluate these attribution methods arises. A key idea is to remove the pixels considered most relevant by an attribution for the data samples and report the drop in accuracy. But how does one remove a pixel without destroying the entire image? The validity of the benchmark is determined by the implementation of the removal routine. ROAD introduces a *Noisy Linear Imputation* operator that is simple to implement and keeps the dependencies intact while provably removing the information contained in the chosen pixels (see Figure on the left).
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 ## Paper
 For a more profound introduction please have a look at our paper (available on arXiv for now).
 
