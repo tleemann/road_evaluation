@@ -194,9 +194,10 @@ class NoisyLinearImputer(BaseImputer):
     def batched_call(self, img: torch.Tensor, mask: torch.Tensor):
         """ Pseudo implementation of batched interface. """
         res_list = []
+        in_device = img.device
         for i in range(len(img)):
-            res_list.append(self.__call__(img[i], mask[i]))
-        return torch.stack(res_list)
+            res_list.append(self.__call__(img[i].cpu(), mask[i].cpu()))
+        return torch.stack(res_list).to(in_device)
 
 def _from_str(imputer_str):
     """ Return a default imputer from a string. """
