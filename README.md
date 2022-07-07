@@ -20,8 +20,7 @@ Attribution methods are explainability techniques, that assign importance scores
 <br>
 <br>
 <br>
-<br>
-<br>
+
 ## Paper
 For a more profound introduction please have a look at our paper (available on arXiv for now).
 
