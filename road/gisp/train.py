@@ -188,7 +188,7 @@ def train_predictor(train_loader, test_loader, mfv, model_gnet, args):
             ## train pnet
             # forward path
             x_g = model_gnet(x_m).detach()
-            x_i = torch.where(mask.byte(), x_m, x_g)
+            x_i = torch.where(mask.bool(), x_m, x_g)
             # resize x_i
             #x_i_resize = torch.nn.functional.interpolate(x_i, 
             #        size=(224,224), mode='bilinear', align_corners=False)
@@ -229,7 +229,7 @@ def train_predictor(train_loader, test_loader, mfv, model_gnet, args):
                 with torch.no_grad():
                     # forward path
                     x_g_val = model_gnet(x_m_val).detach()
-                    x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val)
+                    x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val)
                     
                     # resize x_i
                     #x_i_val_resize = torch.nn.functional.interpolate(x_i_val, 

@@ -111,7 +111,7 @@ def retraining(dataset_train, dataset_test, explanations_train, explanations_tes
     res_acc = torch.zeros(len(percentages))
     prob_acc = torch.zeros(len(percentages))
     for i, p in enumerate(percentages):
-        model = modelclass(pretrained=False)
+        model = modelclass()
         num_ftrs = model.fc.in_features
         model.fc = nn.Linear(num_ftrs, num_of_classes)
         model = model.to(use_device)

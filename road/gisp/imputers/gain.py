@@ -149,7 +149,7 @@ class Imputer:
                 ## train dnet d mode
                 # forward pass with only dnetf in training.
                 x_g = model_gnet(x_m).detach() # call generator.
-                x_i = torch.where(mask.byte(), x_m, x_g) # impute.
+                x_i = torch.where(mask.bool(), x_m, x_g) # impute.
                 hint = utils.generate_hint(mask, args)
                 y_f_pred = model_dnetf(torch.cat([x_i,hint],dim=1)) # call imputation predictor.
                 y_f_target = mask.float()
@@ -169,7 +169,7 @@ class Imputer:
                 ## train gnet
                 # forward path
                 x_g = model_gnet(x_m)
-                x_i = torch.where(mask.byte(), x_m, x_g)
+                x_i = torch.where(mask.bool(), x_m, x_g)
                 hint = utils.generate_hint(mask, args)
                 y_f_pred = model_dnetf(torch.cat([x_i,hint],dim=1))
                 y_f_target = mask.float()
@@ -212,7 +212,7 @@ class Imputer:
                     model_dnetf.eval()
                     # forward path
                     x_g_val = model_gnet(x_m_val).detach()
-                    x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val)
+                    x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val)
                     hint_val = utils.generate_hint(mask_val, args)
                     y_f_pred_val = model_dnetf(torch.cat([x_i_val,hint_val],dim=1))
                     y_f_target_val = mask_val.float()
@@ -224,7 +224,7 @@ class Imputer:
                     ## validate gnet
                     # forward path
                     x_g_val = model_gnet(x_m_val)
-                    x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val) # imputed x.
+                    x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val) # imputed x.
                     hint_val = utils.generate_hint(mask_val, args)
                     y_f_pred_val = model_dnetf(torch.cat([x_i_val,hint_val],dim=1))
                     y_f_target_val = mask_val.float()

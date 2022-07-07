@@ -119,7 +119,7 @@ class Imputer:
                 ## train dnet d mode
                 # forward path
                 x_g = model_gnet(x_m)
-                x_i = torch.where(mask.byte(), x_m, x_g) 
+                x_i = torch.where(mask.bool(), x_m, x_g) 
                 # calc the loss
                 loss_g  = torch.mean((x_i-x_g)**2)
                 
@@ -149,7 +149,7 @@ class Imputer:
                     model_gnet.eval()
                     # forward path
                     x_g_val = model_gnet(x_m_val)
-                    x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val) 
+                    x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val) 
                     # calculate the loss
                     loss_g_val  = torch.mean((x_i_val-x_g_val)**2)
                 

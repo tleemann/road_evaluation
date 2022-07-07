@@ -38,7 +38,7 @@ def get_imputer(imputation, retrain):
 def run_no_retrain(imputation):
     _, explanation_test, _, prediction_test = load_expl(None, expl_path_test)
     # Load the model
-    model = models.resnet18(pretrained=False)
+    model = models.resnet18()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 10)
     model = model.to(use_device)

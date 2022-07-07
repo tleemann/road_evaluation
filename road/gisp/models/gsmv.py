@@ -45,7 +45,7 @@ class GNet_FCDrop(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get a zero imputted input
-        x = torch.where(mask.byte(), x_m, torch.tensor(0.0, device=device))
+        x = torch.where(mask.bool(), x_m, torch.tensor(0.0, device=device))
         #z = torch.randn((x_m.shape[0], self.n_features//8)).to(device) 
         # concat mask and x_i
         x = torch.cat([x,mask.float()], dim=1)
@@ -96,7 +96,7 @@ class GNet_FC(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get a zero imputted input
-        x = torch.where(mask.byte(), x_m, torch.tensor(0.0, device=device))
+        x = torch.where(mask.bool(), x_m, torch.tensor(0.0, device=device))
         z = torch.randn((x_m.shape[0], self.n_features//8)).to(device) 
         # concat mask and x_i
         x = torch.cat([x,mask.float(),z], dim=1)
@@ -181,7 +181,7 @@ class GNet_FCRes(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # concat mask and x_i
         z = torch.randn((x_i.shape[0], self.n_features//8)).to(device) #TODO: try different z sizes
         x = torch.cat([x_i,mask.float(),z], dim=1)
@@ -394,7 +394,7 @@ class GNet_ResNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m).float()
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         mask = torch.unsqueeze(mask[:,0,:,:], 1)
         # concat mask and x_i
         z = torch.randn(mask.shape, device=device) * (1.0-mask.float())
@@ -486,7 +486,7 @@ class GNet_AttnNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.tensor(torch.isnan(x_m), dtype=float)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         mask = torch.unsqueeze(mask[:,0,:,:], 1)
         # concat mask and x_i
         z = torch.randn(mask.shape, device=device) * (1.0-mask.float())
@@ -552,7 +552,7 @@ class GNet_UNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         mask = torch.unsqueeze(mask[:,0,:,:], 1)
         # concat mask and x_i
         z = torch.randn(mask.shape, device=device) * (1.0-mask.float())

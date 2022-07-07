@@ -1,5 +1,4 @@
 import torch
-from torch._C import device
 import torchvision
 import torchvision.transforms as transforms
 from torchvision import datasets, models

@@ -73,7 +73,7 @@ class MissingProcess(object):
         # fingerprint the input and use it as seed
         device = x_m.device
         mask = 1.0 - torch.isnan(x_m)
-        x_i = torch.where(mask.byte(), x_m, torch.tensor((0.0), device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor((0.0), device=device))
         return x_i, x_m
 
     def mcar_uniform(self, x):
@@ -85,7 +85,7 @@ class MissingProcess(object):
         device = x.device
         missing_rate_use = torch.rand(1)*self.args.missing_rate
         mask = (1 - torch.bernoulli(torch.ones(*x.shape[1:]) * missing_rate_use)).unsqueeze(0).expand(*x.shape)
-        x_masked = torch.where(mask.byte(), x, torch.tensor(float('nan'), device=device))
+        x_masked = torch.where(mask.bool(), x, torch.tensor(float('nan'), device=device))
         return x, x_masked
 
     def mcar_rect(self, x):
@@ -110,7 +110,7 @@ class MissingProcess(object):
         
         mask = torch.ones_like(x)
         mask[:, p1x:p2x, p1y:p2y] = 0.0
-        x_masked = torch.where(mask.byte(), x, torch.tensor(float('nan'), device=device))
+        x_masked = torch.where(mask.bool(), x, torch.tensor(float('nan'), device=device))
         return x, x_masked
     
     def mcar_rectinv(self, x):
@@ -135,7 +135,7 @@ class MissingProcess(object):
         
         mask = torch.ones_like(x)
         mask[:, p1x:p2x, p1y:p2y] = 0.0
-        x_masked = torch.where((1.0-mask).byte(), x, torch.tensor(float('nan'), device=device))
+        x_masked = torch.where((1.0-mask).bool(), x, torch.tensor(float('nan'), device=device))
         return x, x_masked
     
     def mnar_foreground(self, x):
@@ -150,7 +150,7 @@ class MissingProcess(object):
         #        (1 - mask_sel) * (1-self.args.missing_rate))
         mask = 1 - torch.bernoulli(mask_sel * self.args.missing_rate + \
                 (1 - mask_sel) * 0.1)
-        x_masked = torch.where(mask.byte(), x, torch.tensor(float('nan'), device=device))
+        x_masked = torch.where(mask.bool(), x, torch.tensor(float('nan'), device=device))
         return x, x_masked
     
     def mnar_background(self, x):
@@ -164,7 +164,7 @@ class MissingProcess(object):
         #mask = 1 - torch.bernoulli(mask_sel * self.args.missing_rate)
         mask = 1 - torch.bernoulli(mask_sel * self.args.missing_rate + \
                 (1 - mask_sel) * 0.1)
-        x_masked = torch.where(mask.byte(), x, torch.tensor(float('nan'), device=device))
+        x_masked = torch.where(mask.bool(), x, torch.tensor(float('nan'), device=device))
         return x, x_masked
     
 

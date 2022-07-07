@@ -140,7 +140,7 @@ class Imputer:
                 ## train dnet d mode
                 # forward path
                 x_g = model_gnet(x_m).detach()
-                x_i = torch.where(mask.byte(), x_m, x_g)
+                x_i = torch.where(mask.bool(), x_m, x_g)
                 hint = utils.generate_hint(mask, args)
                 y_f_pred = model_dnetf(torch.cat([x_i,hint],dim=1))
                 y_f_target = mask.float()
@@ -160,7 +160,7 @@ class Imputer:
                 ## train gnet
                 # forward path
                 x_g = model_gnet(x_m)
-                x_i = torch.where(mask.byte(), x_m, x_g)
+                x_i = torch.where(mask.bool(), x_m, x_g)
                 hint = utils.generate_hint(mask, args)
                 y_f_pred = model_dnetf(torch.cat([x_i,hint],dim=1))
                 y_f_target = mask.float()

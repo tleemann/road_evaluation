@@ -99,7 +99,7 @@ class GNetWrapper:
             real_mask = torch.unsqueeze(mask[:,0,:,:], 1).float()
         else:
             real_mask = mask.float()
-        real_data = torch.where(mask.byte(), x_m,  torch.tensor(0.0, device=x_m.device))
+        real_data = torch.where(mask.bool(), x_m,  torch.tensor(0.0, device=x_m.device))
         self.impu_noise.uniform_()
         x_g = self.model_impu(real_data, real_mask, self.impu_noise)
         x_g -= self.mfv
@@ -379,7 +379,7 @@ class Imputer:
                     real_mask = torch.unsqueeze(mask[:,0,:,:], 1).float()
                 else:
                     real_mask = mask.float()
-                real_data = torch.where(mask.byte(), x_m, 
+                real_data = torch.where(mask.bool(), x_m, 
                         torch.tensor(0.0, device=device))
 
                 # Update discriminators' parameters

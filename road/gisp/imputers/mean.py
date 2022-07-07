@@ -24,7 +24,7 @@ class GNet_Const(torch.nn.Module):
     def forward(self, x_m):
         device = x_m.device
         mask = 1.0 - torch.isnan(x_m)
-        x = torch.where(mask.byte(), x_m, torch.tensor(self.val, device=device))
+        x = torch.where(mask.bool(), x_m, torch.tensor(self.val, device=device))
         return x
 
 

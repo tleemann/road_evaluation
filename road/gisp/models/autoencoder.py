@@ -36,7 +36,7 @@ class GNet_FC(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # concat mask and x_i
         x = self.net(x_i)
         x_out = x.view(x_m_in.shape)
@@ -75,7 +75,7 @@ class GNet_FCRes(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # concat mask and x_i
         z = torch.randn((x_i.shape[0], 64)).to(device) #TODO: try different z sizes
         x = torch.cat([x_i,mask.float(),z], dim=1)
@@ -252,7 +252,7 @@ class GNet_ResNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # forward path
         x_out = self.net(x_i)
         return x_out
@@ -303,7 +303,7 @@ class GNet_AttnNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # forward path
         x_out = self.net(x_i)
         return x_out
@@ -332,7 +332,7 @@ class GNet_UNet(nn.Module):
         # get masks, 0 means missing
         mask = 1.0 - torch.isnan(x_m)
         # get zero imputted input
-        x_i = torch.where(mask.byte(), x_m, torch.tensor(0.0,device=device))
+        x_i = torch.where(mask.bool(), x_m, torch.tensor(0.0,device=device))
         # forward path
         x1 = self.convblock_l1(x_i)
         x2 = self.convblock_l2(self.down(x1))

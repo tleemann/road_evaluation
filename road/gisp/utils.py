@@ -321,7 +321,7 @@ def eval_visual(test_loader, model_gnet, mfv, device,
     x_m_val = x_m_val.to(device) - mfv
     x_g_val = model_gnet(x_m_val)
     mask_val = ~torch.isnan(x_m_val)
-    x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val)
+    x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val)
     with torch.no_grad():
         # prepare image output
         imgs_g = [x_val.to('cpu:0'), x_m_val.to('cpu:0')] # Xval, xval masked
@@ -340,7 +340,7 @@ def eval_visual(test_loader, model_gnet, mfv, device,
         for _ in range(N_SAMPLES):
             x_m_val = x_m_val.to(device)
             x_g_val = model_gnet(x_m_val)
-            x_i_val = torch.where(mask_val.byte(), x_m_val, x_g_val)
+            x_i_val = torch.where(mask_val.bool(), x_m_val, x_g_val)
             imgs_g.append(x_g_val.to('cpu:0'))
             imgs_i.append(x_i_val.to('cpu:0'))
         # save output files
@@ -411,7 +411,7 @@ def eval_ensemble(test_loader, model_gnet, model_pnet, mfv,
             btc_xs = [(x_m+mfv).cpu().numpy()]
             for _ in range(N_SAMPLES):
                 x_g = model_gnet(x_m)
-                x_i = torch.where(mask.byte(), x_m, x_g)
+                x_i = torch.where(mask.bool(), x_m, x_g)
                 y_out = model_pnet(x_i)
                 _, y_pred = torch.max(y_out, 1)
                 y_pred = y_pred.view(-1, 1)
