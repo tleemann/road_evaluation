@@ -128,8 +128,9 @@ if __name__ == "__main__":
         Save the results to some JSON file named imputation_results.json in a dict format.
     """
     percentages = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
-    imputations = ["fixed", "linear"]
-    my_imputers = {"fixed": ZeroImputer(), "linear": NoisyLinearImputer(noise=0.05)}
+    imputations = ["fixed", "linear", "gan"]
+    my_imputers = {"fixed": ZeroImputer(), "linear": NoisyLinearImputer(noise=0.05), 
+                   "gan": GAINImputer("../../road/gisp/models/cifar_10_best.pt", use_device=(device)}
 
     if os.path.exists("imputation_results.json"):
         results = json.load(open("imputation_results.json"))
