@@ -24,7 +24,7 @@ Attribution methods are explainability techniques, that assign importance scores
 ## Paper
 For a more profound introduction please have a look at our paper (available on arXiv for now).
 
-Yao Rong, Tobias Leemann, Vadim Borisov, Gjergji Kasneci and Enkelejda Kasneci. ["A Constistent and Efficient Evaluation Strategy for Feature Attribution Methods"](https://arxiv.org/pdf/2202.00449), *International Conference on Machine Learning (ICML)*, PMLR, 2022
+Yao Rong, Tobias Leemann, Vadim Borisov, Gjergji Kasneci and Enkelejda Kasneci. ["A Constistent and Efficient Evaluation Strategy for Attribution Methods"](https://arxiv.org/pdf/2202.00449), *International Conference on Machine Learning (ICML)*, PMLR, 2022
 
 
 ## Getting started
@@ -54,7 +54,7 @@ and start evaluating faithfulness!
 Please cite us if you use our code or ressources in your own work, for instance with the following BibTex entry:
 ```
 @inproceedings{rong2022evaluating,
-  title={A Consistent And Efficient Evaluation Strategy for Feature Attribution Methods},
+  title={A Consistent And Efficient Evaluation Strategy for Attribution Methods},
   booktitle={International Conference on Machine Learning},
   author={Rong, Yao and Leemann, Tobias and Borisov, Vadim and Kasneci, Gjergji and Kasneci, Enkelejda},
   year={2022},
