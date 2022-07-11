@@ -57,7 +57,7 @@ Please cite us if you use our code or ressources in your own work, for instance 
   title     = {A Consistent and Efficient Evaluation Strategy for Attribution Methods},
   author    = {Rong, Yao and Leemann, Tobias and Borisov, Vadim and Kasneci, Gjergji and Kasneci, Enkelejda},
   booktitle = {Proceedings of the 39th International Conference on Machine Learning},
-  pages     =	{18770--18795},
+  pages     = {18770--18795},
   year      = {2022},
   publisher = {PMLR}
 }
