@@ -53,11 +53,13 @@ and start evaluating faithfulness!
 ## Credits
 Please cite us if you use our code or ressources in your own work, for instance with the following BibTex entry:
 ```
-@inproceedings{rong2022evaluating,
-  title={A Consistent And Efficient Evaluation Strategy for Attribution Methods},
-  booktitle={International Conference on Machine Learning},
-  author={Rong, Yao and Leemann, Tobias and Borisov, Vadim and Kasneci, Gjergji and Kasneci, Enkelejda},
-  year={2022},
-  organization={PMLR}
+@InProceedings{rong22consistent,
+  title     = {A Consistent and Efficient Evaluation Strategy for Attribution Methods},
+  author    = {Rong, Yao and Leemann, Tobias and Borisov, Vadim and Kasneci, Gjergji and Kasneci, Enkelejda},
+  booktitle = {Proceedings of the 39th International Conference on Machine Learning},
+  pages     =	{18770--18795},
+  year      = {2022},
+  publisher = {PMLR}
 }
+
 ```
