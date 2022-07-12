@@ -15,6 +15,10 @@ from .imputed_dataset import ImputedDataset, ImputedDatasetMasksOnly
 from .gpu_dataloader import ImputingDataLoaderWrapper
 from .retraining import road_eval
 
+#https://github.com/explosion/spaCy/issues/7664
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 def run_road(model, dataset_test, explanations_test, transform_test, percentages, morf=True, batch_size=64, imputation = NoisyLinearImputer(noise=0.01)):
     """ Run the ROAD benchmark. 
         model: Pretrained model on data set.
