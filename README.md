@@ -29,14 +29,20 @@ Yao Rong, Tobias Leemann, Vadim Borisov, Gjergji Kasneci and Enkelejda Kasneci. 
 
 ## Getting started
 ### Conda environment
-We recommend setting up an extra conda environment for the use of this code to ensure matching versions of the dependencies are installed. This can be done by running the following commands on the terminal:
+We recommend setting up an extra conda environment for this code to ensure matching versions of the dependencies are installed. To setup the environment and run the notebooks, we assume you have a working installation of Anaconda and Jupyter that and your shell is correctly configured to use the ``conda`` and ``jupyter`` commands.
 
+In this case, you can setup the environment and the corresponding Jupyter Kernel by running the install scripts corresponding to your OS on the terminal:
+
+**Linux**
 ```
-conda env create -f requirements.yml
-conda activate road
-ipython kernel install --user --name=road
+./setup.sh
 ```
-You can now use an existing installation of Jupyter Notebook Lab / with the ``road``-kernel. This should allow you to run the scripts and the Notebook in this repository. 
+**Windows PowerShell**
+```
+./setup.ps1
+```
+
+You can now use your existing installation of Jupyter Notebook / Lab with the ``road``-kernel (don't forget to restart the Jupyter Server to see the kernel). This should allow you to run the scripts and the notebooks in this repository. 
 
 ### Tutorial
 We recommend to take a look at the notebook ``RoadBenchmarkDemo.ipynb`` first where the most relevant features are explained.
