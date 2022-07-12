@@ -35,13 +35,13 @@ In this case, you can setup the environment and the corresponding Jupyter Kernel
 
 **Linux**
 ```
-./setup.sh
+source setup.sh
 ```
 **Windows PowerShell**
 ```
 ./setup.ps1
 ```
-
+Don't forget to answer YES, when promted.
 You can now use your existing installation of Jupyter Notebook / Lab with the ``road``-kernel (don't forget to restart the Jupyter Server to see the kernel). This should allow you to run the scripts and the notebooks in this repository. 
 
 ### Tutorial
