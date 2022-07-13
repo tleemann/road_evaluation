@@ -1,0 +1,8 @@
+{"basemethod": "ig",
+ "modifiers": ["sg", "sq", "var"],
+ "imputation": "linear",
+ "morf": true,
+ "datafile": "result/noretrain.json",
+ "percentages": [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9],
+ "timeoutdays": 0
+}
