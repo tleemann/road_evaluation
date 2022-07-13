@@ -13,7 +13,10 @@
     "percentages": [0.1, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9] # eval percentages
     "timeoutdays": 0 # rerun the unfinished eval parameters n day before. 
    ```
-      We provide two empty json files to store the retrain and no-retrain eval results. You can also generate these json files by runing:
+   
+   We provide two empty json files to store the retrain and no-retrain eval results. 
+   
+   You can also generate the json file to store the results by runing:
    ```python  
    python utils.py --result_file='./result/filename.json'
    ```
