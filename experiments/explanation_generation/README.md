@@ -12,7 +12,7 @@ sh expl_food.sh # on Food-101
 #### Preparation
 + Provide the path to the trained model that needs to be explained to  `--model_path`.
 
-    A trained model on cifar can be found in the folder `road_evaluation/data/`. You can download the model trained on Food-101 here and put it in the folder `road_evaluation/data/`.
+    A trained model on cifar can be found in the folder `road_evaluation/data/`. You can download the model trained on Food-101 [here](https://drive.google.com/file/d/19YCp30x8R_PRxjG4K4nIIE71HwBV7MR7/view?usp=sharing) and put it in the folder `road_evaluation/data/`.
 
 + Provide the path to the dataset to `--input_path` and the path to save the explanation `--save_path`.
 
