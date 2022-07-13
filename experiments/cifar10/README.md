@@ -1,27 +1,29 @@
-# experiments/cifar10: "A Consistent and Efficient Evaluation Strategy for Feature Attribution Methods"
-
-We run the script using:
--Python=3.8.8
--Pytorch=1.8.1
--torchvision=0.9
+## Experiments on CIFAR10
 
 ### Scripts:
-1. "ExplanationGeneration.py": to generate different explanations (IG,GB-Families). For this, please install the package captum from here: https://captum.ai/
 
-2. "RetrainingMethods.py": to run retraining methods,
++ "run_retraining_script.sh": to run **Retrain** methods (ROAR). You can configure the training parameters in `retrain_params.json`. 
+   "run_noretraining_script.sh": to run **No-Retrain** methods. You can configure the training parameters in `noretrain_params.json`. 
+   ```python
+   "basemethod": "ig" or "gb"
+   "modifiers": ["base", "sg", "sq", "var"] # expl methods
+   "imputation": "fixed" or "linear" or "gain" # "fixed": mean-value imputation, "linear": Noisy Linear Imputation, "gain": GAN imputation
+    "morf": false or true  # true: morf, false: lerf 
+    "datafile": "result/retrain.json"  # file to save the results
+    "percentages": [0.1, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9] # eval percentages
+    "timeoutdays": 0 # rerun the unfinished eval parameters n day before. 
+   ```
+      We provide two empty json files to store the retrain and no-retrain eval results. You can also generate these json files by runing:
+   ```python  
+   python utils.py --result_file='./result/filename.json'
+   ```
+   Please also change the path to the dataset and the saved explanations in the sh file.
 
-   "NonRetrainingMethods.ipynb": to run non-retraining methods
-
-3. "imputation_predict.py": Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional 
-
-4. "RankCorrelation.ipynb": to run the rank correlation analysis
-5. "MaskLeakage.py": to run the experiments of class leakage through the mask
++ "imputation_predict.py": Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional 
 
 
 More instructions can be found in the scripts.
 
-### Results:
-All our results are in './data'.
 
 
 
