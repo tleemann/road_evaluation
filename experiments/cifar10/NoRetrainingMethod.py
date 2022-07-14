@@ -7,9 +7,9 @@ import time
 
 ## import from road module
 import road
+from road import run_road
 from road.imputations import *
 from road.retraining import *
-from road.gpu_dataloader import *
 
 
 # different seeds
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 
     # Load trained model
-    model = models.resnet18(pretrained=False)
+    model = models.resnet18()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, num_of_classes)
     # load trained classifier
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         _, expl_test, _, pred_test = load_expl(None, expl_test)
 
 
-        res_acc, prob_acc = run_road_batched(model, dataset_test, expl_test, normalize_transform, [perc_value], morf=morf, batch_size=32, imputation = imputer)
+        res_acc, prob_acc = run_road(model, dataset_test, expl_test, normalize_transform, [perc_value], morf=morf, batch_size=32, imputation = imputer)
         # res_acc, prob_acc = run_road(model, dataset_test, expl_test, normalize_transform, [perc_value], morf=morf, batch_size=32, imputation = imputer)
         print('finished job with params', run_params, " Drawing new params.")
         print('--' * 50)
