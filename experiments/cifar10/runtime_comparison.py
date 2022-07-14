@@ -15,7 +15,7 @@ from road.imputations import NoisyLinearImputer, ChannelMeanImputer, ZeroImputer
 from road.utils import load_expl
 
 # Config
-use_device_gain = "cuda:1"
+use_device_gain = "cuda:0"
 
 expl_path_test = "./data/ig/base_test.pkl"
 expl_path_train = "./data/ig/base_train.pkl"
