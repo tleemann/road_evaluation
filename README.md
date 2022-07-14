@@ -1,7 +1,7 @@
 # Remove And Debias (ROAD)
 ## A Consistent and Efficient Evaluation Strategy for Feature Attributions
 
-<img align="right" width="300" height="240" src="https://raw.githubusercontent.com/tleemann/road_evaluation/road_v2/images/ICMLPaperTeaser.png">
+<img align="right" width="300" height="240" src="https://raw.githubusercontent.com/tleemann/road_evaluation/main/images/ICMLPaperTeaser.png">
 
 The repository contains the source code of the **Remove And Debias (ROAD)** evaluation method for feature attribution methods. 
 
@@ -13,7 +13,7 @@ This repository is structured as follows:
 * we provide pretrained classification and [GAIN imputation](https://proceedings.mlr.press/v80/yoon18a.html) models for the CIFAR-10 dataset, as well as [Integrated Gradients](https://arxiv.org/abs/1703.01365) (IG) attributions in this repository to allow a quick start with the benchmark.
 
 ## Overview
-<img align="left" width="350" height="350" src="https://raw.githubusercontent.com/tleemann/road_evaluation/road_v2/images/imputation_cifar.png">
+<img align="left" width="350" height="350" src="https://raw.githubusercontent.com/tleemann/road_evaluation/main/images/imputation_cifar.png">
 
 Attribution methods are explainability techniques, that assign importance scores to input features (i.e., pixels in a computer vision context). With many attribution methods being proposed in the recent literature, the need for sound strategies to evaluate these attribution methods arises. A key idea is to remove the pixels considered most relevant by an attribution for the data samples and report the drop in accuracy. But how does one remove a pixel without destroying the entire image? The validity of the benchmark is determined by the implementation of the removal routine. ROAD introduces a *Noisy Linear Imputation* operator that is simple to implement and keeps the dependencies intact while provably removing the information contained in the chosen pixels (see Figure on the left).
 <br>
