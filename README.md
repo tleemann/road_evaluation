@@ -3,7 +3,7 @@
 
 <img align="right" width="300" height="240" src="https://raw.githubusercontent.com/tleemann/road_evaluation/main/images/ICMLPaperTeaser.png">
 
-The repository contains the source code of the **Remove And Debias (ROAD)** evaluation method for feature attribution methods. 
+The repository contains the source code of the <a href="https://proceedings.mlr.press/v162/rong22a.html"><b>Remove And Debias (ROAD)</b></a>  evaluation method for feature attribution methods. 
 
 Unlike other evaluation frameworks, ROAD prevents *Class Information Leakage*, a phenomenon that may distort the evaluation results. This results in a more constistent benchmark, even with the different removal orders Most Relevant First (MoRF) and Least Relevant First (LeRF). Furthermore, it is computationally efficient and requires no costly model retraining steps (see Figure).
 
