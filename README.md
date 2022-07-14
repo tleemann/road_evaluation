@@ -57,6 +57,9 @@ from road import run_road
 and start evaluating faithfulness!
 
 ## Credits
+We would like to thank the authors of [Generative Imputation and Stochastic Prediction](https://arxiv.org/abs/1905.09340), whose [code](https://github.com/mkachuee/GenerativeImputationStochasticPrediction) we used for the GAIN imputation. 
+
+
 Please cite us if you use our code or ressources in your own work, for instance with the following BibTex entry:
 ```
 @InProceedings{rong22consistent,
