@@ -21,6 +21,7 @@ sh expl_food.sh # on Food-101
 #### Example
 A call example call to the script could look like this:
 ```
+mkdir expl_save
 python3 ExplanationGeneration.py --expl_method=ig --model_path ../../data/cifar_8014.pth --save_path expl_save
 ```
 More comments can be found in the scripts.
