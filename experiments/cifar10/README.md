@@ -2,8 +2,8 @@
 
 ### Scripts:
 
-+ "run_retraining_script.sh": to run **Retrain** methods (ROAR). You can configure the training parameters in `retrain_params.json`. 
-   "run_noretraining_script.sh": to run **No-Retrain** methods. You can configure the training parameters in `noretrain_params.json`. 
++ ``run_retraining_script.sh``: to run **Retrain** methods (ROAR). You can configure the training parameters in `retrain_params.json`. 
+  ``run_noretraining_script.sh``: to run **No-Retrain** methods. You can configure the training parameters in `noretrain_params.json`. 
    ```python
    "basemethod": "ig" or "gb"
    "modifiers": ["base", "sg", "sq", "var"] # expl methods
@@ -22,8 +22,9 @@
    ```
    Please also change the path to the dataset and the saved explanations in the sh file.
 
-+ "imputation_predict.py": Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional 
-
++ ``imputation_predict.py``: Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional 
++ ``runtime_script.sh``: Run the runtime benchmark. Set the value in the first line to "retrain", to run the benchmark for the retraining method.
++ ``mask_leakage.py``: Run the experiment, where we predicted the class only from the imputation mask.
 
 More instructions can be found in the scripts.
 
