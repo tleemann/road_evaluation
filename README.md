@@ -31,7 +31,7 @@ Yao Rong, Tobias Leemann, Vadim Borisov, Gjergji Kasneci and Enkelejda Kasneci. 
 ### Conda environment
 We recommend setting up an extra conda environment for this code to ensure matching versions of the dependencies are installed. To setup the environment and run the notebooks, we assume you have a working installation of Anaconda and Jupyter that and your shell is correctly configured to use the ``conda`` command.
 
-In this case, you can setup the environment and the corresponding Jupyter Kernel by running the install scripts corresponding to your OS on the terminal:
+In this case, you can set up the environment and the corresponding Jupyter Kernel by running the install scripts corresponding to your OS on the terminal:
 
 **Linux**
 ```
