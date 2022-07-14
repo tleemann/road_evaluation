@@ -23,9 +23,9 @@
    Please also change the path to the dataset and the saved explanations in the sh file.
    
    **Note:** before running these scripts, you need to generate the feature attribution files. The code for this step can be found in the ``experiments/explanation_generation`` folder of this repository.
-+ ``imputation_predict.py``: Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional 
 + ``runtime_script.sh``: Run the runtime benchmark. Set the value in the first line to "retrain", to run the benchmark for the retraining method.
 + ``mask_leakage.py``: Run the experiment, where we predicted the class only from the imputation mask.
++ ``imputation_predict.py``: Train a predictor to differentiate between imputed and original pixels. See "ImputationPrediction.ipynb" for additional information
 
 More instructions can be found in the scripts.
 
