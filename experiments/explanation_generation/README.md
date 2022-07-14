@@ -18,4 +18,10 @@ sh expl_food.sh # on Food-101
 
 + Choose the explanation methods `--expl_method`: `ig`/ `gb` for IG / GB, `ig_sg`/ `gb_sg` for IG_SG / GB_SG,  `ig_sq`/ `gb_sq` for IG_SQ / GB_SQ,  `ig_var`/ `gb_var` for IG_Var / GB_Var
 
+#### Example
+A call example call to the script could look like this:
+```
+mkdir expl_save
+python3 ExplanationGeneration.py --expl_method=ig --model_path ../../data/cifar_8014.pth --save_path expl_save
+```
 More comments can be found in the scripts.
