@@ -120,7 +120,7 @@ def main():
 		sample, clss = testset[i_num]
 		outputs = model(sample.unsqueeze(0).to(device))
 		_, predicted = torch.max(outputs.data, 1)
-		expl = IG_SG(model, sample.unsqueeze(0).to(device), clss)
+		expl = get_expl(model, sample.unsqueeze(0).to(device), clss)
 		# print(predicted.data[0].cpu().numpy(), outputs.data[0].cpu().numpy(), clss)
 		expl_dict['expl'] = expl
 		expl_dict['prediction'] = predicted.data[0].cpu().numpy()
